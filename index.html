@@ -1,0 +1,1935 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Artisanat Marocain — Dar Zellij</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:wght@300;400;600&family=Noto+Kufi+Arabic:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rouge: #C1272D;
+    --vert:  #006233;
+    --or:    #C9A84C;
+    --or2:   #E8C96A;
+    --creme: #FAF3E0;
+    --brun:  #3B1F0A;
+    --blanc: #FFFDF5;
+    --shadow: rgba(59,31,10,0.18);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Cormorant Garamond', serif;
+    background-color: var(--creme);
+    color: var(--brun);
+    overflow-x: hidden;
+  }
+
+  /* ══════════════ ZELLIJ BACKGROUND ══════════════ */
+  .zellij-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-color: var(--creme);
+    background-image:
+      /* Étoile marocaine répétée */
+      repeating-conic-gradient(from 0deg at 50% 50%, transparent 0deg 30deg, rgba(193,39,45,0.07) 30deg 60deg),
+      repeating-conic-gradient(from 15deg at 50% 50%, transparent 0deg 30deg, rgba(0,98,51,0.06) 30deg 60deg),
+      radial-gradient(circle at 25% 25%, rgba(201,168,76,0.10) 0%, transparent 55%),
+      radial-gradient(circle at 75% 75%, rgba(193,39,45,0.08) 0%, transparent 55%);
+    background-size: 80px 80px, 80px 80px, 100% 100%, 100% 100%;
+  }
+
+  /* Tuiles zellij SVG en overlay */
+  .zellij-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.13;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cpath d='M30 0 L60 30 L30 60 L0 30Z' fill='none' stroke='%23C1272D' stroke-width='1.5'/%3E%3Cpath d='M30 10 L50 30 L30 50 L10 30Z' fill='none' stroke='%23006233' stroke-width='1'/%3E%3Cpath d='M30 20 L40 30 L30 40 L20 30Z' fill='none' stroke='%23C9A84C' stroke-width='1'/%3E%3Cline x1='0' y1='0' x2='60' y2='60' stroke='%23C9A84C' stroke-width='0.5'/%3E%3Cline x1='60' y1='0' x2='0' y2='60' stroke='%23C9A84C' stroke-width='0.5'/%3E%3C/svg%3E");
+    background-size: 60px 60px;
+  }
+
+  /* ══════════════ HEADER ══════════════ */
+  header {
+    position: relative;
+    z-index: 100;
+    background: linear-gradient(135deg, var(--vert) 0%, #004422 50%, var(--rouge) 100%);
+    border-bottom: 4px solid var(--or);
+    padding: 0 2rem;
+    box-shadow: 0 4px 24px var(--shadow);
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 0 0.5rem;
+    border-bottom: 1px solid rgba(201,168,76,0.3);
+  }
+
+  .logo {
+    text-align: center;
+  }
+
+  .logo-ar {
+    font-family: 'Noto Kufi Arabic', sans-serif;
+    font-size: 2rem;
+    color: var(--or2);
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    display: block;
+    line-height: 1;
+  }
+
+  .logo-fr {
+    font-family: 'Amiri', serif;
+    font-size: 0.9rem;
+    color: rgba(232,201,106,0.8);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .btn-panier, .btn-admin {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: all 0.25s;
+  }
+
+  .btn-panier {
+    background: var(--or);
+    color: var(--brun);
+  }
+  .btn-panier:hover { background: var(--or2); transform: translateY(-1px); }
+
+  .btn-admin {
+    background: rgba(255,255,255,0.15);
+    color: var(--or2);
+    border: 1px solid rgba(201,168,76,0.5);
+  }
+  .btn-admin:hover { background: rgba(255,255,255,0.25); }
+
+  .panier-count {
+    background: var(--rouge);
+    color: #fff;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  /* ══════════════ NAV CATÉGORIES ══════════════ */
+  nav {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+  }
+
+  .nav-tab {
+    padding: 0.7rem 1.8rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-family: 'Amiri', serif;
+    font-size: 1.05rem;
+    color: rgba(232,201,106,0.75);
+    transition: all 0.25s;
+    position: relative;
+    letter-spacing: 0.04em;
+  }
+
+  .nav-tab::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 3px;
+    background: var(--or2);
+    transform: translateX(-50%);
+    transition: width 0.3s;
+  }
+
+  .nav-tab:hover, .nav-tab.active {
+    color: var(--or2);
+  }
+
+  .nav-tab.active::after, .nav-tab:hover::after {
+    width: 70%;
+  }
+
+  /* ══════════════ HERO ══════════════ */
+  .hero {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: 3.5rem 2rem 2.5rem;
+    background: linear-gradient(180deg, rgba(0,98,51,0.08) 0%, transparent 100%);
+  }
+
+  .hero-title {
+    font-family: 'Amiri', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    color: var(--vert);
+    line-height: 1.2;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.8);
+  }
+
+  .hero-title span {
+    color: var(--rouge);
+  }
+
+  .hero-sub {
+    margin-top: 0.5rem;
+    font-size: 1.1rem;
+    color: var(--brun);
+    opacity: 0.7;
+    font-style: italic;
+  }
+
+  .ornament {
+    color: var(--or);
+    font-size: 1.8rem;
+    margin: 0.5rem 0;
+    display: block;
+    letter-spacing: 0.2em;
+  }
+
+  /* ══════════════ SECTION CATALOGUE ══════════════ */
+  .catalogue {
+    position: relative;
+    z-index: 10;
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem 4rem;
+  }
+
+  .cat-section {
+    display: none;
+  }
+  .cat-section.active {
+    display: block;
+    animation: fadeIn 0.4s ease;
+  }
+
+  @keyframes fadeIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:none; } }
+
+  .cat-header {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    margin-bottom: 2rem;
+  }
+
+  .cat-icon {
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, var(--vert), var(--rouge));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    box-shadow: 0 4px 16px var(--shadow);
+    flex-shrink: 0;
+  }
+
+  .cat-title {
+    font-family: 'Amiri', serif;
+    font-size: 2rem;
+    color: var(--vert);
+  }
+
+  .cat-desc {
+    font-size: 0.95rem;
+    color: var(--brun);
+    opacity: 0.65;
+    font-style: italic;
+  }
+
+  /* ══════════════ GRID PRODUITS ══════════════ */
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 1.8rem;
+  }
+
+  .product-card {
+    background: var(--blanc);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px var(--shadow);
+    border: 1px solid rgba(201,168,76,0.2);
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+  }
+
+  .product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 32px var(--shadow);
+  }
+
+  .product-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+    background: linear-gradient(135deg, #f0e6c8, #e0d0a0);
+  }
+
+  .product-img-placeholder {
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(135deg, rgba(193,39,45,0.08), rgba(0,98,51,0.08));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.5rem;
+  }
+
+  .product-info {
+    padding: 1rem;
+  }
+
+  .product-name {
+    font-family: 'Amiri', serif;
+    font-size: 1.2rem;
+    color: var(--brun);
+    margin-bottom: 0.3rem;
+  }
+
+  .product-desc {
+    font-size: 0.85rem;
+    color: var(--brun);
+    opacity: 0.6;
+    margin-bottom: 0.8rem;
+    font-style: italic;
+    min-height: 2.5em;
+  }
+
+  .product-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .product-price {
+    font-weight: 600;
+    font-size: 1.25rem;
+    color: var(--rouge);
+  }
+
+  .product-price span {
+    font-size: 0.8rem;
+    color: var(--brun);
+    opacity: 0.7;
+  }
+
+  .btn-add {
+    background: linear-gradient(135deg, var(--vert), #004422);
+    color: var(--or2);
+    border: none;
+    border-radius: 6px;
+    padding: 0.4rem 0.9rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+
+  .btn-add:hover { background: var(--rouge); transform: scale(1.05); }
+
+  .sold-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--rouge);
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 700;
+  }
+
+  .empty-cat {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--brun);
+    opacity: 0.5;
+  }
+  .empty-cat .empty-icon { font-size: 4rem; display: block; margin-bottom: 1rem; }
+
+  /* ══════════════ PAIEMENT SECTION ══════════════ */
+  .payment-section {
+    position: relative;
+    z-index: 10;
+    background: linear-gradient(135deg, var(--vert) 0%, #004422 100%);
+    padding: 3rem 2rem;
+    text-align: center;
+    border-top: 4px solid var(--or);
+  }
+
+  .payment-title {
+    font-family: 'Amiri', serif;
+    font-size: 1.8rem;
+    color: var(--or2);
+    margin-bottom: 0.5rem;
+  }
+
+  .payment-sub {
+    color: rgba(232,201,106,0.7);
+    font-style: italic;
+    margin-bottom: 2rem;
+  }
+
+  .payment-methods {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+
+  .pay-method {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(201,168,76,0.4);
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    color: var(--or2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    min-width: 130px;
+    transition: background 0.2s;
+  }
+
+  .pay-method:hover { background: rgba(255,255,255,0.2); }
+  .pay-method .pay-icon { font-size: 2rem; }
+  .pay-method .pay-name { font-size: 0.85rem; font-weight: 600; letter-spacing: 0.05em; }
+
+  .shipping-info {
+    color: rgba(232,201,106,0.75);
+    font-size: 0.9rem;
+    font-style: italic;
+  }
+
+  /* ══════════════ CONTACT ══════════════ */
+  .contact-section {
+    position: relative;
+    z-index: 10;
+    background: var(--blanc);
+    border-top: 4px solid var(--or);
+    padding: 3rem 2rem;
+  }
+
+  .contact-inner {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .contact-title {
+    font-family: 'Amiri', serif;
+    font-size: 2rem;
+    color: var(--vert);
+    margin-bottom: 0.3rem;
+  }
+
+  .contact-sub {
+    color: var(--brun);
+    opacity: 0.65;
+    font-style: italic;
+    margin-bottom: 2rem;
+  }
+
+  .contact-form {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .form-group {
+    text-align: left;
+  }
+
+  .form-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--vert);
+    margin-bottom: 0.3rem;
+    letter-spacing: 0.04em;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    border: 1.5px solid rgba(0,98,51,0.25);
+    border-radius: 8px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    background: var(--creme);
+    color: var(--brun);
+    transition: border-color 0.2s;
+    outline: none;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: var(--vert);
+    box-shadow: 0 0 0 3px rgba(0,98,51,0.1);
+  }
+
+  .form-group textarea { resize: vertical; min-height: 110px; }
+
+  .btn-send {
+    background: linear-gradient(135deg, var(--rouge), #8a0000);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.85rem 2.5rem;
+    font-family: 'Amiri', serif;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.25s;
+    letter-spacing: 0.05em;
+  }
+
+  .btn-send:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(193,39,45,0.35); }
+
+  .contact-socials {
+    display: flex;
+    justify-content: center;
+    gap: 1.2rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .social-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.2rem;
+    border-radius: 25px;
+    border: 1.5px solid;
+    font-size: 0.9rem;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  .social-wa { border-color: #25D366; color: #25D366; }
+  .social-wa:hover { background: #25D366; color: white; }
+  .social-ig { border-color: #E4405F; color: #E4405F; }
+  .social-ig:hover { background: #E4405F; color: white; }
+  .social-fb { border-color: #1877F2; color: #1877F2; }
+  .social-fb:hover { background: #1877F2; color: white; }
+
+  /* ══════════════ FOOTER ══════════════ */
+  footer {
+    position: relative;
+    z-index: 10;
+    background: var(--brun);
+    color: rgba(232,201,106,0.7);
+    text-align: center;
+    padding: 1.5rem;
+    font-size: 0.85rem;
+    font-style: italic;
+    border-top: 3px solid var(--or);
+  }
+
+  /* ══════════════ PANIER MODAL ══════════════ */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(59,31,10,0.6);
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--blanc);
+    border-radius: 16px;
+    padding: 2rem;
+    width: 90%;
+    max-width: 520px;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+    border: 2px solid var(--or);
+    position: relative;
+  }
+
+  .modal-title {
+    font-family: 'Amiri', serif;
+    font-size: 1.6rem;
+    color: var(--vert);
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    cursor: pointer;
+    color: var(--brun);
+    line-height: 1;
+    opacity: 0.6;
+  }
+  .modal-close:hover { opacity: 1; }
+
+  .panier-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.07);
+  }
+
+  .panier-item-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+    background: linear-gradient(135deg, #f0e6c8, #e0d0a0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+
+  .panier-item-info { flex: 1; }
+  .panier-item-name { font-weight: 600; font-size: 1rem; }
+  .panier-item-price { color: var(--rouge); font-weight: 600; }
+
+  .panier-item-remove {
+    background: none;
+    border: none;
+    color: var(--rouge);
+    cursor: pointer;
+    font-size: 1.2rem;
+    opacity: 0.7;
+  }
+  .panier-item-remove:hover { opacity: 1; }
+
+  .panier-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 2px solid var(--or);
+  }
+
+  .total-label { font-size: 1.1rem; font-weight: 600; }
+  .total-price { font-size: 1.4rem; color: var(--rouge); font-weight: 700; }
+
+  .btn-checkout {
+    width: 100%;
+    margin-top: 1rem;
+    background: linear-gradient(135deg, var(--vert), #004422);
+    color: var(--or2);
+    border: none;
+    border-radius: 8px;
+    padding: 0.9rem;
+    font-family: 'Amiri', serif;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .btn-checkout:hover { background: var(--rouge); }
+
+  /* ══════════════ ADMIN PANEL ══════════════ */
+  #admin-login {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(59,31,10,0.7);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(6px);
+  }
+  #admin-login.open { display: flex; }
+
+  .login-box {
+    background: var(--blanc);
+    border-radius: 16px;
+    padding: 2.5rem;
+    width: 90%;
+    max-width: 380px;
+    border: 2px solid var(--or);
+    text-align: center;
+  }
+
+  .login-box h2 {
+    font-family: 'Amiri', serif;
+    font-size: 1.8rem;
+    color: var(--vert);
+    margin-bottom: 1.5rem;
+  }
+
+  .login-box input {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    border: 1.5px solid rgba(0,98,51,0.3);
+    border-radius: 8px;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    background: var(--creme);
+    outline: none;
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  .btn-login {
+    width: 100%;
+    background: linear-gradient(135deg, var(--vert), #004422);
+    color: var(--or2);
+    border: none;
+    border-radius: 8px;
+    padding: 0.8rem;
+    font-family: 'Amiri', serif;
+    font-size: 1.1rem;
+    cursor: pointer;
+  }
+  .btn-login:hover { background: var(--rouge); }
+
+  .login-error {
+    color: var(--rouge);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    display: none;
+  }
+
+  /* ══════════════ ADMIN PANEL MAIN ══════════════ */
+  #admin-panel {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: var(--creme);
+    z-index: 1500;
+    overflow-y: auto;
+  }
+  #admin-panel.open { display: block; }
+
+  .admin-header {
+    background: linear-gradient(135deg, var(--brun), #1a0a03);
+    color: var(--or2);
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--or);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .admin-header h1 {
+    font-family: 'Amiri', serif;
+    font-size: 1.5rem;
+  }
+
+  .btn-close-admin {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(201,168,76,0.4);
+    color: var(--or2);
+    border-radius: 6px;
+    padding: 0.4rem 1rem;
+    cursor: pointer;
+    font-family: 'Cormorant Garamond', serif;
+    transition: background 0.2s;
+  }
+  .btn-close-admin:hover { background: var(--rouge); }
+
+  .admin-body {
+    padding: 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .admin-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .admin-tab {
+    padding: 0.5rem 1.2rem;
+    border-radius: 6px;
+    border: 1.5px solid rgba(0,98,51,0.3);
+    background: transparent;
+    cursor: pointer;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.95rem;
+    color: var(--brun);
+    transition: all 0.2s;
+  }
+  .admin-tab.active, .admin-tab:hover {
+    background: var(--vert);
+    color: var(--or2);
+    border-color: var(--vert);
+  }
+
+  .admin-section { display: none; }
+  .admin-section.active { display: block; }
+
+  /* Formulaire ajout produit */
+  .add-product-form {
+    background: var(--blanc);
+    border-radius: 12px;
+    padding: 2rem;
+    border: 1px solid rgba(201,168,76,0.25);
+    box-shadow: 0 4px 20px var(--shadow);
+    margin-bottom: 2.5rem;
+  }
+
+  .add-product-form h3 {
+    font-family: 'Amiri', serif;
+    font-size: 1.4rem;
+    color: var(--vert);
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--or);
+    padding-bottom: 0.5rem;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .form-field.full { grid-column: 1/-1; }
+
+  .form-field label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--vert);
+    letter-spacing: 0.04em;
+  }
+
+  .form-field input,
+  .form-field select,
+  .form-field textarea {
+    padding: 0.65rem 1rem;
+    border: 1.5px solid rgba(0,98,51,0.25);
+    border-radius: 8px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    background: var(--creme);
+    color: var(--brun);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .form-field input:focus,
+  .form-field select:focus,
+  .form-field textarea:focus {
+    border-color: var(--vert);
+  }
+
+  .form-field textarea { min-height: 80px; resize: vertical; }
+
+  /* Upload image */
+  .img-upload-zone {
+    border: 2px dashed rgba(0,98,51,0.35);
+    border-radius: 10px;
+    padding: 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s;
+    background: rgba(0,98,51,0.03);
+    position: relative;
+  }
+
+  .img-upload-zone:hover {
+    border-color: var(--vert);
+    background: rgba(0,98,51,0.06);
+  }
+
+  .img-upload-zone input[type=file] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+
+  .upload-icon { font-size: 2.5rem; display: block; margin-bottom: 0.5rem; }
+  .upload-text { font-size: 0.9rem; color: var(--brun); opacity: 0.65; }
+
+  .img-preview-grid {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 0.8rem;
+  }
+
+  .img-preview-item {
+    position: relative;
+    width: 70px;
+    height: 70px;
+  }
+
+  .img-preview-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 2px solid var(--or);
+  }
+
+  .img-preview-remove {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: var(--rouge);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 0.7rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+
+  .btn-add-product {
+    background: linear-gradient(135deg, var(--rouge), #8a0000);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.8rem 2.5rem;
+    font-family: 'Amiri', serif;
+    font-size: 1.1rem;
+    cursor: pointer;
+    margin-top: 1.2rem;
+    transition: all 0.25s;
+  }
+  .btn-add-product:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(193,39,45,0.3); }
+
+  /* Liste produits admin */
+  .admin-products-list {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .admin-product-row {
+    background: var(--blanc);
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+    border: 1px solid rgba(201,168,76,0.2);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 2px 10px var(--shadow);
+  }
+
+  .admin-product-row .row-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, #f0e6c8, #e0d0a0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+  }
+
+  .admin-product-row .row-info { flex: 1; }
+  .row-name { font-weight: 600; font-size: 1.05rem; }
+  .row-cat { font-size: 0.8rem; color: var(--vert); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+  .row-price { color: var(--rouge); font-weight: 700; margin-top: 2px; }
+
+  .row-actions { display: flex; gap: 0.5rem; }
+
+  .btn-edit, .btn-delete {
+    padding: 0.35rem 0.8rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+
+  .btn-edit { background: rgba(0,98,51,0.12); color: var(--vert); }
+  .btn-edit:hover { background: var(--vert); color: white; }
+  .btn-delete { background: rgba(193,39,45,0.1); color: var(--rouge); }
+  .btn-delete:hover { background: var(--rouge); color: white; }
+
+  /* Modal édition */
+  .edit-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(59,31,10,0.6);
+    z-index: 3000;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+  .edit-modal.open { display: flex; }
+
+  .edit-modal .modal {
+    max-width: 600px;
+    border: 2px solid var(--or);
+  }
+
+  /* Messages admin */
+  .messages-list { display: grid; gap: 1rem; }
+
+  .message-card {
+    background: var(--blanc);
+    border-radius: 10px;
+    padding: 1.2rem;
+    border-left: 4px solid var(--vert);
+    box-shadow: 0 2px 10px var(--shadow);
+  }
+
+  .msg-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+  }
+
+  .msg-name { font-weight: 700; color: var(--vert); }
+  .msg-date { font-size: 0.8rem; color: var(--brun); opacity: 0.6; }
+  .msg-subject { font-style: italic; margin-bottom: 0.4rem; color: var(--rouge); font-size: 0.9rem; }
+  .msg-body { font-size: 0.95rem; color: var(--brun); }
+
+  .btn-reply {
+    margin-top: 0.7rem;
+    background: transparent;
+    border: 1px solid var(--vert);
+    color: var(--vert);
+    border-radius: 6px;
+    padding: 0.3rem 0.8rem;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-family: 'Cormorant Garamond', serif;
+    transition: all 0.2s;
+  }
+  .btn-reply:hover { background: var(--vert); color: white; }
+
+  /* Notification toast */
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: var(--vert);
+    color: var(--or2);
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    font-family: 'Amiri', serif;
+    font-size: 1rem;
+    z-index: 9999;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    transform: translateY(6rem);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    border: 1px solid var(--or);
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* Bannière flag */
+  .flag-bar {
+    height: 5px;
+    background: linear-gradient(90deg, var(--rouge) 50%, var(--vert) 50%);
+    position: relative;
+    z-index: 100;
+  }
+
+  /* Checkout form */
+  .checkout-form { margin-top: 1.5rem; }
+  .checkout-form .form-group { margin-bottom: 1rem; }
+  .checkout-select { width: 100%; padding: 0.7rem; border-radius: 8px; border: 1.5px solid rgba(0,98,51,0.25); font-family: 'Cormorant Garamond', serif; font-size: 1rem; background: var(--creme); outline:none; }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .form-row, .form-grid { grid-template-columns: 1fr; }
+    .form-field.full { grid-column: 1; }
+    .header-top { flex-wrap: wrap; gap: 0.8rem; justify-content: center; }
+    nav { flex-wrap: wrap; }
+    .nav-tab { padding: 0.5rem 1rem; font-size: 0.9rem; }
+    .admin-product-row { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Zellij Background -->
+<div class="zellij-bg"></div>
+<div class="zellij-overlay"></div>
+
+<!-- Flag Bar -->
+<div class="flag-bar"></div>
+
+<!-- ══════════════ HEADER ══════════════ -->
+<header>
+  <div class="header-top">
+    <div style="width:160px;"></div>
+    <div class="logo">
+      <span class="logo-ar">دار الزليج</span>
+      <span class="logo-fr">Dar Zellij — Artisanat Marocain</span>
+    </div>
+    <div class="header-actions">
+      <button class="btn-panier" onclick="togglePanier()">
+        🛍️ Panier <span class="panier-count" id="panier-count">0</span>
+      </button>
+      <button class="btn-admin" onclick="openAdminLogin()">
+        ⚙️ Admin
+      </button>
+    </div>
+  </div>
+  <nav>
+    <button class="nav-tab active" onclick="showCat('tous')">🏠 Tous</button>
+    <button class="nav-tab" onclick="showCat('babouche')">👡 Babouches</button>
+    <button class="nav-tab" onclick="showCat('caftan')">👘 Caftans</button>
+    <button class="nav-tab" onclick="showCat('jellaba')">🧥 Jellabas</button>
+    <button class="nav-tab" onclick="showCat('cuivre')">🔶 Cuivre</button>
+  </nav>
+</header>
+
+<!-- ══════════════ HERO ══════════════ -->
+<div class="hero">
+  <span class="ornament">✦ ✦ ✦</span>
+  <h1 class="hero-title">L'Artisanat <span>Marocain</span><br>à votre portée</h1>
+  <p class="hero-sub">Pièces authentiques faites à la main — Livraison dans le monde entier</p>
+  <span class="ornament">✦ ✦ ✦</span>
+</div>
+
+<!-- ══════════════ CATALOGUE ══════════════ -->
+<div class="catalogue">
+
+  <!-- TOUS -->
+  <div class="cat-section active" id="cat-tous">
+    <div class="cat-header">
+      <div class="cat-icon">🇲🇦</div>
+      <div>
+        <div class="cat-title">Toute la Collection</div>
+        <div class="cat-desc">Nos plus belles pièces artisanales marocaines</div>
+      </div>
+    </div>
+    <div class="products-grid" id="grid-tous"></div>
+  </div>
+
+  <!-- BABOUCHE -->
+  <div class="cat-section" id="cat-babouche">
+    <div class="cat-header">
+      <div class="cat-icon">👡</div>
+      <div>
+        <div class="cat-title">Babouches</div>
+        <div class="cat-desc">Chaussures traditionnelles en cuir fin de Fès et Marrakech</div>
+      </div>
+    </div>
+    <div class="products-grid" id="grid-babouche"></div>
+  </div>
+
+  <!-- CAFTAN -->
+  <div class="cat-section" id="cat-caftan">
+    <div class="cat-header">
+      <div class="cat-icon">👘</div>
+      <div>
+        <div class="cat-title">Caftans</div>
+        <div class="cat-desc">Robes de cérémonie brodées à la main, luxe marocain</div>
+      </div>
+    </div>
+    <div class="products-grid" id="grid-caftan"></div>
+  </div>
+
+  <!-- JELLABA -->
+  <div class="cat-section" id="cat-jellaba">
+    <div class="cat-header">
+      <div class="cat-icon">🧥</div>
+      <div>
+        <div class="cat-title">Jellabas</div>
+        <div class="cat-desc">Vêtements traditionnels pour hommes et femmes, laine et soie</div>
+      </div>
+    </div>
+    <div class="products-grid" id="grid-jellaba"></div>
+  </div>
+
+  <!-- CUIVRE -->
+  <div class="cat-section" id="cat-cuivre">
+    <div class="cat-header">
+      <div class="cat-icon">🔶</div>
+      <div>
+        <div class="cat-title">Articles en Cuivre</div>
+        <div class="cat-desc">Plateaux, lampes, théières et décorations ciselées à la main</div>
+      </div>
+    </div>
+    <div class="products-grid" id="grid-cuivre"></div>
+  </div>
+
+</div>
+
+<!-- ══════════════ PAIEMENT ══════════════ -->
+<div class="payment-section">
+  <div class="payment-title">💳 Moyens de Paiement</div>
+  <div class="payment-sub">Paiement sécurisé — Vos données sont protégées</div>
+  <div class="payment-methods">
+    <div class="pay-method">
+      <span class="pay-icon">💳</span>
+      <span class="pay-name">Carte Bancaire</span>
+      <span style="font-size:0.75rem;opacity:0.75">Visa / Mastercard</span>
+    </div>
+    <div class="pay-method">
+      <span class="pay-icon">📱</span>
+      <span class="pay-name">PayPal</span>
+      <span style="font-size:0.75rem;opacity:0.75">Compte sécurisé</span>
+    </div>
+    <div class="pay-method">
+      <span class="pay-icon">📲</span>
+      <span class="pay-name">Virement</span>
+      <span style="font-size:0.75rem;opacity:0.75">CIH / Attijariwafa</span>
+    </div>
+    <div class="pay-method">
+      <span class="pay-icon">💰</span>
+      <span class="pay-name">Western Union</span>
+      <span style="font-size:0.75rem;opacity:0.75">International</span>
+    </div>
+    <div class="pay-method">
+      <span class="pay-icon">🏠</span>
+      <span class="pay-name">À la livraison</span>
+      <span style="font-size:0.75rem;opacity:0.75">Maroc uniquement</span>
+    </div>
+  </div>
+  <div class="shipping-info">🚚 Livraison offerte au Maroc dès 500 MAD · Expédition internationale disponible</div>
+</div>
+
+<!-- ══════════════ CONTACT ══════════════ -->
+<div class="contact-section">
+  <div class="contact-inner">
+    <div class="contact-title">✉️ Nous Contacter</div>
+    <div class="contact-sub">Une question ? Une commande spéciale ? Nous vous répondons sous 24h</div>
+    <div class="contact-form" id="contact-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Votre nom *</label>
+          <input type="text" id="c-nom" placeholder="Mohammed Alami">
+        </div>
+        <div class="form-group">
+          <label>Email *</label>
+          <input type="email" id="c-email" placeholder="email@exemple.com">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Téléphone</label>
+          <input type="tel" id="c-tel" placeholder="+212 6xx xxx xxx">
+        </div>
+        <div class="form-group">
+          <label>Sujet</label>
+          <select id="c-sujet">
+            <option>Commande</option>
+            <option>Livraison</option>
+            <option>Produit personnalisé</option>
+            <option>Retour / Échange</option>
+            <option>Autre</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Votre message *</label>
+        <textarea id="c-message" placeholder="Décrivez votre demande ou question..."></textarea>
+      </div>
+      <div style="text-align:center">
+        <button class="btn-send" onclick="sendMessage()">Envoyer le message ✦</button>
+      </div>
+    </div>
+    <div class="contact-socials">
+      <a class="social-link social-wa" href="#">💬 WhatsApp</a>
+      <a class="social-link social-ig" href="#">📸 Instagram</a>
+      <a class="social-link social-fb" href="#">👥 Facebook</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer>
+  <div class="flag-bar" style="position:relative;z-index:1;margin-bottom:1rem;"></div>
+  © 2025 Dar Zellij — Artisanat Marocain Authentique · Fès, Maroc 🇲🇦
+</footer>
+
+<!-- ══════════════ MODAL PANIER ══════════════ -->
+<div class="modal-overlay" id="panier-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="togglePanier()">✕</button>
+    <div class="modal-title">🛍️ Votre Panier</div>
+    <div id="panier-items"></div>
+    <div class="panier-total" id="panier-total" style="display:none">
+      <span class="total-label">Total</span>
+      <span class="total-price" id="total-amount">0 MAD</span>
+    </div>
+    <div id="panier-empty" style="text-align:center;padding:2rem;color:var(--brun);opacity:0.5">
+      <div style="font-size:3rem;margin-bottom:0.5rem">🛒</div>
+      Votre panier est vide
+    </div>
+    <!-- Checkout Form -->
+    <div class="checkout-form" id="checkout-form" style="display:none">
+      <hr style="border-color:var(--or);margin-bottom:1rem">
+      <div style="font-family:'Amiri',serif;font-size:1.1rem;color:var(--vert);margin-bottom:0.8rem">📦 Informations de livraison</div>
+      <div class="form-group">
+        <label>Nom complet *</label>
+        <input type="text" id="ch-nom" placeholder="Votre nom">
+      </div>
+      <div class="form-group">
+        <label>Adresse *</label>
+        <input type="text" id="ch-adresse" placeholder="Rue, Ville, Pays">
+      </div>
+      <div class="form-group">
+        <label>Mode de paiement</label>
+        <select class="checkout-select" id="ch-paiement">
+          <option>Carte bancaire</option>
+          <option>PayPal</option>
+          <option>Virement bancaire</option>
+          <option>Western Union</option>
+          <option>À la livraison (Maroc)</option>
+        </select>
+      </div>
+      <button class="btn-checkout" onclick="confirmOrder()">✦ Confirmer la commande ✦</button>
+    </div>
+    <button class="btn-checkout" id="btn-go-checkout" onclick="goCheckout()" style="display:none">Passer la commande →</button>
+  </div>
+</div>
+
+<!-- ══════════════ ADMIN LOGIN ══════════════ -->
+<div id="admin-login">
+  <div class="login-box">
+    <div style="font-size:2.5rem;margin-bottom:0.5rem">🔐</div>
+    <h2>Espace Admin</h2>
+    <input type="text" id="login-user" placeholder="Identifiant" value="">
+    <input type="password" id="login-pass" placeholder="Mot de passe" value="">
+    <button class="btn-login" onclick="doLogin()">Se connecter</button>
+    <div class="login-error" id="login-error">Identifiants incorrects</div>
+    <div style="margin-top:1rem;">
+      <button onclick="document.getElementById('admin-login').classList.remove('open')" style="background:none;border:none;color:var(--brun);opacity:0.5;cursor:pointer;font-size:0.85rem">Annuler</button>
+    </div>
+    <div style="margin-top:0.8rem;font-size:0.75rem;color:var(--brun);opacity:0.5;font-style:italic">
+      Par défaut : admin / admin123
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ ADMIN PANEL ══════════════ -->
+<div id="admin-panel">
+  <div class="admin-header">
+    <h1>⚙️ Panneau d'Administration — Dar Zellij</h1>
+    <button class="btn-close-admin" onclick="closeAdmin()">← Retour au site</button>
+  </div>
+  <div class="admin-body">
+    <div class="admin-tabs">
+      <button class="admin-tab active" onclick="showAdminTab('add')">➕ Ajouter un article</button>
+      <button class="admin-tab" onclick="showAdminTab('list')">📋 Gérer les articles</button>
+      <button class="admin-tab" onclick="showAdminTab('msgs')">✉️ Messages clients</button>
+    </div>
+
+    <!-- ADD PRODUCT -->
+    <div class="admin-section active" id="atab-add">
+      <div class="add-product-form">
+        <h3>➕ Nouvel Article</h3>
+        <div class="form-grid">
+          <div class="form-field">
+            <label>Nom de l'article *</label>
+            <input type="text" id="ap-nom" placeholder="Ex: Babouche brodée or">
+          </div>
+          <div class="form-field">
+            <label>Catégorie *</label>
+            <select id="ap-cat">
+              <option value="babouche">👡 Babouche</option>
+              <option value="caftan">👘 Caftan</option>
+              <option value="jellaba">🧥 Jellaba</option>
+              <option value="cuivre">🔶 Cuivre</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Prix (MAD) *</label>
+            <input type="number" id="ap-prix" placeholder="250" min="0">
+          </div>
+          <div class="form-field">
+            <label>Stock disponible</label>
+            <input type="number" id="ap-stock" placeholder="10" min="0" value="1">
+          </div>
+          <div class="form-field full">
+            <label>Description</label>
+            <textarea id="ap-desc" placeholder="Décrivez l'article : matière, couleur, dimensions, origine..."></textarea>
+          </div>
+          <div class="form-field full">
+            <label>Photos de l'article</label>
+            <div class="img-upload-zone" id="upload-zone">
+              <input type="file" accept="image/*" multiple id="ap-photos" onchange="handlePhotoUpload(event)">
+              <span class="upload-icon">📷</span>
+              <div class="upload-text">Cliquez ou glissez vos photos ici<br><small>JPG, PNG — plusieurs photos possibles</small></div>
+            </div>
+            <div class="img-preview-grid" id="preview-grid"></div>
+          </div>
+        </div>
+        <button class="btn-add-product" onclick="addProduct()">✦ Enregistrer l'article ✦</button>
+      </div>
+    </div>
+
+    <!-- PRODUCT LIST -->
+    <div class="admin-section" id="atab-list">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+        <div style="font-family:'Amiri',serif;font-size:1.4rem;color:var(--vert)">📋 Tous les articles</div>
+        <select id="filter-cat" onchange="renderAdminList()" style="padding:0.4rem 0.8rem;border-radius:6px;border:1.5px solid rgba(0,98,51,0.3);font-family:'Cormorant Garamond',serif;background:var(--creme)">
+          <option value="tous">Toutes catégories</option>
+          <option value="babouche">Babouches</option>
+          <option value="caftan">Caftans</option>
+          <option value="jellaba">Jellabas</option>
+          <option value="cuivre">Cuivre</option>
+        </select>
+      </div>
+      <div class="admin-products-list" id="admin-list"></div>
+    </div>
+
+    <!-- MESSAGES -->
+    <div class="admin-section" id="atab-msgs">
+      <div style="font-family:'Amiri',serif;font-size:1.4rem;color:var(--vert);margin-bottom:1.5rem">✉️ Messages des clients</div>
+      <div class="messages-list" id="messages-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ MODAL ÉDITION ══════════════ -->
+<div class="edit-modal" id="edit-modal">
+  <div class="modal" style="max-width:600px">
+    <button class="modal-close" onclick="closeEditModal()">✕</button>
+    <div class="modal-title">✏️ Modifier l'article</div>
+    <input type="hidden" id="edit-id">
+    <div class="form-grid" style="gap:1rem">
+      <div class="form-field">
+        <label>Nom</label>
+        <input type="text" id="edit-nom">
+      </div>
+      <div class="form-field">
+        <label>Catégorie</label>
+        <select id="edit-cat">
+          <option value="babouche">👡 Babouche</option>
+          <option value="caftan">👘 Caftan</option>
+          <option value="jellaba">🧥 Jellaba</option>
+          <option value="cuivre">🔶 Cuivre</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Prix (MAD)</label>
+        <input type="number" id="edit-prix">
+      </div>
+      <div class="form-field">
+        <label>Stock</label>
+        <input type="number" id="edit-stock">
+      </div>
+      <div class="form-field full">
+        <label>Description</label>
+        <textarea id="edit-desc"></textarea>
+      </div>
+      <div class="form-field full">
+        <label>Ajouter / changer les photos</label>
+        <div class="img-upload-zone">
+          <input type="file" accept="image/*" multiple id="edit-photos" onchange="handleEditPhotoUpload(event)">
+          <span class="upload-icon">📷</span>
+          <div class="upload-text">Cliquez pour changer ou ajouter des photos</div>
+        </div>
+        <div class="img-preview-grid" id="edit-preview-grid"></div>
+      </div>
+    </div>
+    <button class="btn-add-product" onclick="saveEdit()" style="margin-top:1rem">💾 Enregistrer les modifications</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════ STORE ══════════════
+const CAT_ICONS = { babouche:'👡', caftan:'👘', jellaba:'🧥', cuivre:'🔶' };
+const CAT_NAMES = { babouche:'Babouche', caftan:'Caftan', jellaba:'Jellaba', cuivre:'Cuivre' };
+
+// Load from localStorage
+let products = JSON.parse(localStorage.getItem('dz_products') || '[]');
+let messages = JSON.parse(localStorage.getItem('dz_messages') || '[]');
+let panier = JSON.parse(localStorage.getItem('dz_panier') || '[]');
+
+// Demo products if empty
+if (products.length === 0) {
+  products = [
+    { id: 1, nom: 'Babouche brodée or', cat: 'babouche', prix: 350, stock: 5, desc: 'Cuir fin de Fès, broderie or artisanale', photos: [] },
+    { id: 2, nom: 'Caftan de mariage', cat: 'caftan', prix: 2800, stock: 2, desc: 'Soie et velours, broderie sfifa, taille unique', photos: [] },
+    { id: 3, nom: 'Jellaba homme bleu royal', cat: 'jellaba', prix: 900, stock: 8, desc: 'Laine fine, capuche traditionnelle, taille M', photos: [] },
+    { id: 4, nom: 'Plateau cuivre ciselé ⌀40cm', cat: 'cuivre', prix: 650, stock: 3, desc: 'Cuivre pur, motifs géométriques, artisan de Tiznit', photos: [] },
+    { id: 5, nom: 'Babouche femme rose', cat: 'babouche', prix: 280, stock: 10, desc: 'Cuir souple, semelle confort, couleurs vives', photos: [] },
+    { id: 6, nom: 'Lampe cuivre ajourée', cat: 'cuivre', prix: 480, stock: 4, desc: 'Lanterne traditionnelle, percée à la main, 30cm', photos: [] },
+  ];
+  saveProducts();
+}
+
+function saveProducts() { localStorage.setItem('dz_products', JSON.stringify(products)); }
+function saveMessages() { localStorage.setItem('dz_messages', JSON.stringify(messages)); }
+function savePanier() { localStorage.setItem('dz_panier', JSON.stringify(panier)); }
+
+let nextId = products.reduce((m,p) => Math.max(m,p.id), 0) + 1;
+
+// ══════════════ RENDER ══════════════
+function renderAllGrids() {
+  const grids = { tous: document.getElementById('grid-tous'), babouche: document.getElementById('grid-babouche'), caftan: document.getElementById('grid-caftan'), jellaba: document.getElementById('grid-jellaba'), cuivre: document.getElementById('grid-cuivre') };
+  Object.values(grids).forEach(g => g.innerHTML = '');
+
+  products.forEach(p => {
+    const card = makeCard(p);
+    grids.tous.insertAdjacentHTML('beforeend', card);
+    if (grids[p.cat]) grids[p.cat].insertAdjacentHTML('beforeend', card);
+  });
+
+  // Empty states
+  Object.entries(grids).forEach(([k, g]) => {
+    if (g.innerHTML === '') {
+      g.innerHTML = `<div class="empty-cat" style="grid-column:1/-1"><span class="empty-icon">🌟</span>Aucun article dans cette catégorie pour le moment.<br><small style="opacity:0.7">Ajoutez des articles depuis le panneau admin.</small></div>`;
+    }
+  });
+}
+
+function makeCard(p) {
+  const img = p.photos && p.photos.length > 0
+    ? `<img class="product-img" src="${p.photos[0]}" alt="${p.nom}">`
+    : `<div class="product-img-placeholder">${CAT_ICONS[p.cat] || '🎁'}</div>`;
+  return `
+  <div class="product-card" id="card-${p.id}">
+    ${p.stock === 0 ? '<span class="sold-badge">Épuisé</span>' : ''}
+    ${img}
+    <div class="product-info">
+      <div class="product-name">${p.nom}</div>
+      <div class="product-desc">${p.desc || ''}</div>
+      <div class="product-footer">
+        <div class="product-price">${p.prix} <span>MAD</span></div>
+        <button class="btn-add" onclick="addToPanier(${p.id})" ${p.stock === 0 ? 'disabled style="opacity:0.4;cursor:not-allowed"' : ''}>
+          ${p.stock === 0 ? 'Épuisé' : '+ Panier'}
+        </button>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ══════════════ CATÉGORIES NAV ══════════════
+function showCat(cat) {
+  document.querySelectorAll('.cat-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('cat-' + cat).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ══════════════ PANIER ══════════════
+function addToPanier(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  const existing = panier.find(x => x.id === id);
+  if (existing) { existing.qty += 1; } else { panier.push({ id, qty: 1 }); }
+  savePanier();
+  updatePanierCount();
+  showToast(`✦ ${p.nom} ajouté au panier !`);
+}
+
+function updatePanierCount() {
+  const total = panier.reduce((s,x) => s + x.qty, 0);
+  document.getElementById('panier-count').textContent = total;
+}
+
+function togglePanier() {
+  const m = document.getElementById('panier-modal');
+  m.classList.toggle('open');
+  if (m.classList.contains('open')) renderPanier();
+}
+
+function renderPanier() {
+  const container = document.getElementById('panier-items');
+  const emptyEl = document.getElementById('panier-empty');
+  const totalEl = document.getElementById('panier-total');
+  const btnCheckout = document.getElementById('btn-go-checkout');
+  const checkoutForm = document.getElementById('checkout-form');
+
+  container.innerHTML = '';
+
+  if (panier.length === 0) {
+    emptyEl.style.display = 'block';
+    totalEl.style.display = 'none';
+    btnCheckout.style.display = 'none';
+    checkoutForm.style.display = 'none';
+    return;
+  }
+
+  emptyEl.style.display = 'none';
+  totalEl.style.display = 'flex';
+  btnCheckout.style.display = 'block';
+  checkoutForm.style.display = 'none';
+
+  let total = 0;
+  panier.forEach(item => {
+    const p = products.find(x => x.id === item.id);
+    if (!p) return;
+    const subtotal = p.prix * item.qty;
+    total += subtotal;
+    const img = p.photos && p.photos.length > 0
+      ? `<img src="${p.photos[0]}" style="width:60px;height:60px;border-radius:8px;object-fit:cover;">`
+      : `<div class="panier-item-img">${CAT_ICONS[p.cat] || '🎁'}</div>`;
+
+    container.insertAdjacentHTML('beforeend', `
+      <div class="panier-item">
+        ${img}
+        <div class="panier-item-info">
+          <div class="panier-item-name">${p.nom}</div>
+          <div style="font-size:0.8rem;color:var(--brun);opacity:0.6">${item.qty} × ${p.prix} MAD</div>
+          <div class="panier-item-price">${subtotal} MAD</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:0.4rem">
+          <button onclick="changeQty(${item.id},-1)" style="background:rgba(0,0,0,0.08);border:none;border-radius:4px;width:26px;height:26px;cursor:pointer;font-weight:700">−</button>
+          <span style="font-weight:600">${item.qty}</span>
+          <button onclick="changeQty(${item.id},1)" style="background:rgba(0,0,0,0.08);border:none;border-radius:4px;width:26px;height:26px;cursor:pointer;font-weight:700">+</button>
+          <button class="panier-item-remove" onclick="removeFromPanier(${item.id})">🗑</button>
+        </div>
+      </div>`);
+  });
+
+  document.getElementById('total-amount').textContent = total + ' MAD';
+}
+
+function changeQty(id, delta) {
+  const item = panier.find(x => x.id === id);
+  if (!item) return;
+  item.qty += delta;
+  if (item.qty <= 0) panier = panier.filter(x => x.id !== id);
+  savePanier();
+  updatePanierCount();
+  renderPanier();
+}
+
+function removeFromPanier(id) {
+  panier = panier.filter(x => x.id !== id);
+  savePanier();
+  updatePanierCount();
+  renderPanier();
+}
+
+function goCheckout() {
+  document.getElementById('btn-go-checkout').style.display = 'none';
+  document.getElementById('checkout-form').style.display = 'block';
+}
+
+function confirmOrder() {
+  const nom = document.getElementById('ch-nom').value.trim();
+  const adresse = document.getElementById('ch-adresse').value.trim();
+  if (!nom || !adresse) { showToast('⚠️ Veuillez remplir tous les champs', 'rouge'); return; }
+  showToast('✦ Commande confirmée ! Nous vous contacterons sous 24h.');
+  panier = [];
+  savePanier();
+  updatePanierCount();
+  document.getElementById('panier-modal').classList.remove('open');
+}
+
+// ══════════════ ADMIN ══════════════
+const ADMIN_USER = 'admin';
+const ADMIN_PASS = 'admin123';
+
+function openAdminLogin() {
+  document.getElementById('admin-login').classList.add('open');
+}
+
+function doLogin() {
+  const u = document.getElementById('login-user').value;
+  const p = document.getElementById('login-pass').value;
+  if (u === ADMIN_USER && p === ADMIN_PASS) {
+    document.getElementById('admin-login').classList.remove('open');
+    document.getElementById('admin-panel').classList.add('open');
+    renderAdminList();
+    renderMessages();
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+  }
+}
+
+function closeAdmin() {
+  document.getElementById('admin-panel').classList.remove('open');
+}
+
+function showAdminTab(tab) {
+  document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('atab-' + tab).classList.add('active');
+  event.target.classList.add('active');
+  if (tab === 'list') renderAdminList();
+  if (tab === 'msgs') renderMessages();
+}
+
+// ── Upload photos ──
+let newPhotoDataUrls = [];
+let editPhotoDataUrls = [];
+
+function handlePhotoUpload(event) {
+  const files = Array.from(event.target.files);
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      newPhotoDataUrls.push(e.target.result);
+      renderPreviewGrid('preview-grid', newPhotoDataUrls, 'new');
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function handleEditPhotoUpload(event) {
+  const files = Array.from(event.target.files);
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      editPhotoDataUrls.push(e.target.result);
+      renderPreviewGrid('edit-preview-grid', editPhotoDataUrls, 'edit');
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function renderPreviewGrid(gridId, urls, mode) {
+  const grid = document.getElementById(gridId);
+  grid.innerHTML = '';
+  urls.forEach((url, i) => {
+    grid.insertAdjacentHTML('beforeend', `
+      <div class="img-preview-item">
+        <img src="${url}" alt="Photo ${i+1}">
+        <button class="img-preview-remove" onclick="removePhoto('${mode}',${i})">✕</button>
+      </div>`);
+  });
+}
+
+function removePhoto(mode, idx) {
+  if (mode === 'new') { newPhotoDataUrls.splice(idx,1); renderPreviewGrid('preview-grid', newPhotoDataUrls, 'new'); }
+  else { editPhotoDataUrls.splice(idx,1); renderPreviewGrid('edit-preview-grid', editPhotoDataUrls, 'edit'); }
+}
+
+// ── Add product ──
+function addProduct() {
+  const nom = document.getElementById('ap-nom').value.trim();
+  const cat = document.getElementById('ap-cat').value;
+  const prix = parseFloat(document.getElementById('ap-prix').value);
+  const stock = parseInt(document.getElementById('ap-stock').value) || 0;
+  const desc = document.getElementById('ap-desc').value.trim();
+
+  if (!nom || !prix) { showToast('⚠️ Nom et prix obligatoires', 'rouge'); return; }
+
+  const product = { id: nextId++, nom, cat, prix, stock, desc, photos: [...newPhotoDataUrls] };
+  products.push(product);
+  saveProducts();
+  renderAllGrids();
+
+  // Reset form
+  document.getElementById('ap-nom').value = '';
+  document.getElementById('ap-prix').value = '';
+  document.getElementById('ap-stock').value = '1';
+  document.getElementById('ap-desc').value = '';
+  newPhotoDataUrls = [];
+  document.getElementById('preview-grid').innerHTML = '';
+  document.getElementById('ap-photos').value = '';
+
+  showToast('✦ Article ajouté avec succès !');
+}
+
+// ── Admin list ──
+function renderAdminList() {
+  const filter = document.getElementById('filter-cat').value;
+  const list = document.getElementById('admin-list');
+  list.innerHTML = '';
+  const filtered = filter === 'tous' ? products : products.filter(p => p.cat === filter);
+
+  if (filtered.length === 0) {
+    list.innerHTML = '<div style="text-align:center;padding:2rem;opacity:0.5">Aucun article trouvé</div>';
+    return;
+  }
+
+  filtered.forEach(p => {
+    const img = p.photos && p.photos.length > 0
+      ? `<img class="row-img" src="${p.photos[0]}" alt="${p.nom}" style="width:60px;height:60px;border-radius:8px;object-fit:cover;">`
+      : `<div class="row-img">${CAT_ICONS[p.cat] || '🎁'}</div>`;
+
+    list.insertAdjacentHTML('beforeend', `
+      <div class="admin-product-row">
+        ${img}
+        <div class="row-info">
+          <div class="row-name">${p.nom}</div>
+          <div class="row-cat">${CAT_NAMES[p.cat] || p.cat} · Stock: ${p.stock}</div>
+          <div class="row-price">${p.prix} MAD</div>
+        </div>
+        <div class="row-actions">
+          <button class="btn-edit" onclick="openEdit(${p.id})">✏️ Modifier</button>
+          <button class="btn-delete" onclick="deleteProduct(${p.id})">🗑 Supprimer</button>
+        </div>
+      </div>`);
+  });
+}
+
+function deleteProduct(id) {
+  if (!confirm('Supprimer cet article ?')) return;
+  products = products.filter(p => p.id !== id);
+  saveProducts();
+  renderAllGrids();
+  renderAdminList();
+  showToast('Article supprimé.');
+}
+
+// ── Edit product ──
+function openEdit(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('edit-id').value = id;
+  document.getElementById('edit-nom').value = p.nom;
+  document.getElementById('edit-cat').value = p.cat;
+  document.getElementById('edit-prix').value = p.prix;
+  document.getElementById('edit-stock').value = p.stock;
+  document.getElementById('edit-desc').value = p.desc || '';
+  editPhotoDataUrls = [...(p.photos || [])];
+  renderPreviewGrid('edit-preview-grid', editPhotoDataUrls, 'edit');
+  document.getElementById('edit-modal').classList.add('open');
+}
+
+function closeEditModal() {
+  document.getElementById('edit-modal').classList.remove('open');
+}
+
+function saveEdit() {
+  const id = parseInt(document.getElementById('edit-id').value);
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  p.nom = document.getElementById('edit-nom').value.trim();
+  p.cat = document.getElementById('edit-cat').value;
+  p.prix = parseFloat(document.getElementById('edit-prix').value);
+  p.stock = parseInt(document.getElementById('edit-stock').value) || 0;
+  p.desc = document.getElementById('edit-desc').value.trim();
+  p.photos = [...editPhotoDataUrls];
+  saveProducts();
+  renderAllGrids();
+  renderAdminList();
+  closeEditModal();
+  showToast('✦ Modifications enregistrées !');
+}
+
+// ══════════════ MESSAGES ══════════════
+function sendMessage() {
+  const nom = document.getElementById('c-nom').value.trim();
+  const email = document.getElementById('c-email').value.trim();
+  const sujet = document.getElementById('c-sujet').value;
+  const msg = document.getElementById('c-message').value.trim();
+
+  if (!nom || !email || !msg) { showToast('⚠️ Veuillez remplir les champs obligatoires', 'rouge'); return; }
+
+  const now = new Date();
+  messages.unshift({
+    id: Date.now(),
+    nom,
+    email,
+    tel: document.getElementById('c-tel').value,
+    sujet,
+    msg,
+    date: now.toLocaleDateString('fr-FR') + ' ' + now.toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'})
+  });
+  saveMessages();
+
+  document.getElementById('c-nom').value = '';
+  document.getElementById('c-email').value = '';
+  document.getElementById('c-tel').value = '';
+  document.getElementById('c-message').value = '';
+
+  showToast('✦ Message envoyé ! Nous vous répondrons sous 24h.');
+}
+
+function renderMessages() {
+  const list = document.getElementById('messages-list');
+  list.innerHTML = '';
+  if (messages.length === 0) {
+    list.innerHTML = '<div style="text-align:center;padding:2rem;opacity:0.5">📭 Aucun message pour le moment</div>';
+    return;
+  }
+  messages.forEach(m => {
+    list.insertAdjacentHTML('beforeend', `
+      <div class="message-card">
+        <div class="msg-header">
+          <span class="msg-name">👤 ${m.nom} — <a href="mailto:${m.email}" style="color:var(--vert)">${m.email}</a>${m.tel ? ' · 📞 '+m.tel : ''}</span>
+          <span class="msg-date">${m.date}</span>
+        </div>
+        <div class="msg-subject">📌 ${m.sujet}</div>
+        <div class="msg-body">${m.msg}</div>
+        <a href="mailto:${m.email}?subject=Re: ${m.sujet}" class="btn-reply">↩ Répondre par email</a>
+      </div>`);
+  });
+}
+
+// ══════════════ TOAST ══════════════
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.background = type === 'rouge' ? 'var(--rouge)' : 'var(--vert)';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ══════════════ INIT ══════════════
+renderAllGrids();
+updatePanierCount();
+
+// Keyboard: Enter on login
+document.getElementById('login-pass').addEventListener('keydown', e => { if(e.key === 'Enter') doLogin(); });
+</script>
+</body>
+</html>
